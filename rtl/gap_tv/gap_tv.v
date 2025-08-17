@@ -8,8 +8,8 @@ module gap_tv(
 
 input         clk;
 input         rst_n;
+input  [63:0] dout;
 output        ren;
 output [15:0] raddr;
-output [63:0] dout;
 
 endmodule
