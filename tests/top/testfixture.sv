@@ -35,4 +35,9 @@ always@(posedge clk)
 	else
 		dout <= 64'd0;
 
+initial begin
+	#10_000_000;
+	$finish;
+end
+
 endmodule
