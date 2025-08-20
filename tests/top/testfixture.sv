@@ -1,24 +1,48 @@
 `timescale 1 ns / 1 ps
+`define PORT_SIZE 32
 
 module testfixture;
 
 reg clk = 1'b0;
 reg rst_n = 1'b0;
+reg f_num = 2;
 
-initial forever #(500.0 / 3.33) clk = ~clk;
-initial #1 rst_n = ~rst_n;
+initial forever #10 clk = ~clk;
+initial #20 rst_n = ~rst_n;
 
-wire        ren;
-wire [15:0] raddr;
-reg  [63:0] dout = 64'd0;
+wire ren, wen;
+wire [7:0] raddr, waddr;
 
-reg  [63:0] mem [0:65535];
+reg [15:0] mem_r [0:65536];
+reg [15:0] mem_w [0:65536];
 
-gap_tv u_gap_tv(.clk  (clk  ),
-                .rst_n(rst_n),
-                .ren  (ren  ),
-                .raddr(raddr),
-                .dout (dout ));
+reg [`PORT_SIZE*16-1:0] din;
+reg [`PORT_SIZE*16-1:0] dout;
+
+integer i;
+
+always@(posedge clk)
+	for (i = 0; i <= 31; i++)
+		begin : assign_bits
+			if (ren)
+					din[i*16 +: 16] <= mem_r[raddr * `PORT_SIZE + i];
+			else
+					din[i*16 +: 16] <= 16'b0;
+			if (wen)
+					mem_w[waddr * `PORT_SIZE + i] <= dout[i*16 +: 16];
+		end
+
+gap_tv uut1(
+	.clk(clk),
+	.rst_n(rst_n),
+	.f_num(f_num),
+	.ren(ren),
+	.raddr(raddr),
+	.din(din),
+	.wen(wen),
+	.waddr(waddr),
+	.dout(dout)
+);
 
 initial begin
 	//$fsdbDumpfile("test_000.fsdb");
@@ -28,17 +52,12 @@ initial begin
 end
 
 initial begin
-	$readmemb("bssr_64.dat", mem);
+	$readmemb("bssr_frames.dat", mem_r);
+	$readmemb("empty.dat", mem_w);
 end
 
-always@(posedge clk)
-	if (ren)
-		dout <= mem[raddr];
-	else
-		dout <= 64'd0;
-
 initial begin
-	#10_000_000;
+	#100_000;
 	$finish;
 end
 
