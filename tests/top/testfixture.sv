@@ -21,8 +21,10 @@ gap_tv u_gap_tv(.clk  (clk  ),
                 .dout (dout ));
 
 initial begin
-	$fsdbDumpfile("test_000.fsdb");
-	$fsdbDumpvars;
+	//$fsdbDumpfile("test_000.fsdb");
+	//$fsdbDumpvars;
+	$dumpfile("test_000.vcd");
+	$dumpvars;
 end
 
 initial begin
