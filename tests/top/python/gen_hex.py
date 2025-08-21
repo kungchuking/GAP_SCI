@@ -2,10 +2,10 @@ from PIL import Image
 import numpy as np
 import struct
 
-img = Image.open("bssr2_64.bmp")
+img = Image.open("../bssr2_64.bmp")
 img = np.array(img).astype(np.float16) / 255.
 
-with open("bssr2_64.dat", "w") as fd:
+with open("../bssr2_64.dat", "w") as fd:
     for row in img:
         for col in row:
             # -- Get the raw 2-byte representation

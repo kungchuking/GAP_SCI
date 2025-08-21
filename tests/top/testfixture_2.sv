@@ -1,3 +1,5 @@
+// Test dx_diff counter
+
 `timescale 1 ns / 1 ps
 `define PORT_SIZE 32
 
@@ -8,7 +10,7 @@ reg rst_n = 1'b0;
 reg f_num = 2;
 
 initial forever #10 clk = ~clk;
-initial #20 rst_n = ~rst_n;
+initial #60 rst_n = ~rst_n;
 
 wire ren, wen;
 wire [7:0] raddr, waddr;
@@ -22,7 +24,7 @@ reg [`PORT_SIZE*16-1:0] dout;
 integer i;
 
 always@(posedge clk)
-	for (i = 0; i <= 31; i++)
+	for (i = 0; i <= `PORT_SIZE - 1; i = i + 1)
 		begin : assign_bits
 			if (ren)
 					din[i*16 +: 16] <= mem_r[raddr * `PORT_SIZE + i];
@@ -44,6 +46,18 @@ gap_tv uut1(
 	.dout(dout)
 );
 
+reg en = 0;
+wire dx_diff_rst_n;
+wire [7:0] addr;
+
+dx_diff_addr_counter uut2(
+	.clk(clk),
+	.rst_n(rst_n),
+	.en(en),
+	.dx_diff_rst_n(dx_diff_rst_n),
+	.addr(addr)
+);
+
 initial begin
 	//$fsdbDumpfile("test_000.fsdb");
 	//$fsdbDumpvars;
@@ -57,6 +71,16 @@ initial begin
 end
 
 initial begin
+	#40
+	en <= 1;
+	#160
+	en <= 0;
+	#40
+	en <= 1;
+	#100
+	en <= 0;
+	#40
+	en <= 1;
 	#100_000;
 	$finish;
 end

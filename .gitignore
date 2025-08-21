@@ -1,5 +1,7 @@
 **/.DS_Store
 vivado/
 
+**/python/*.dat
+
 **/__pycache__/*
 **/*.pyc
