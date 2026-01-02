@@ -1,0 +1,6 @@
+verilog xil_defaultlib  \
+"../../../../vivado.gen/sources_1/ip/fp16_subtract/sim/fp16_subtract.v" \
+
+verilog xil_defaultlib "glbl.v"
+
+nosort

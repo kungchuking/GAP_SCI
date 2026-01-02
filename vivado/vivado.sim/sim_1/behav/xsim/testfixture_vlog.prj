@@ -1,0 +1,12 @@
+# compile verilog/system verilog design source files
+verilog xil_defaultlib  \
+"../../../../vivado.gen/sources_1/ip/fp16_subtract/sim/fp16_subtract.v" \
+
+sv xil_defaultlib  \
+"../../../../../tests/top/testfixture_1.sv" \
+
+# compile glbl module
+verilog xil_defaultlib "glbl.v"
+
+# Do not sort compile order
+nosort

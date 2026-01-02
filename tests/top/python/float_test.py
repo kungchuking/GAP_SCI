@@ -1,3 +1,5 @@
+# Generate script for testfixture_1
+
 import struct
 import numpy as np
 from random import random, uniform

@@ -1,0 +1,11 @@
+INFO: [VRFC 10-2263] Analyzing Verilog file "/nfs/ug/homes-2/c/cheng520/ISML/GAP_SCI/vivado/vivado.gen/sources_1/ip/fp16_subtract/sim/fp16_subtract.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module fp16_subtract
+INFO: [VRFC 10-2263] Analyzing Verilog file "/nfs/ug/homes-2/c/cheng520/ISML/GAP_SCI/rtl/gap_tv/gap_tv.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module gap_tv
+INFO: [VRFC 10-311] analyzing module dx_diff_addr_counter
+INFO: [VRFC 10-311] analyzing module dx_diff
+WARNING: [VRFC 10-8332] begin/end is required for generate-for in this mode of Verilog [/nfs/ug/homes-2/c/cheng520/ISML/GAP_SCI/rtl/gap_tv/gap_tv.v:142]
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/nfs/ug/homes-2/c/cheng520/ISML/GAP_SCI/tests/top/testfixture_2.sv" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module testfixture
+INFO: [VRFC 10-2263] Analyzing Verilog file "/nfs/ug/homes-2/c/cheng520/ISML/GAP_SCI/vivado/vivado.sim/sim_2/behav/xsim/glbl.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module glbl

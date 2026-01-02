@@ -1,7 +1,9 @@
-// Test dx_diff counter
+// Test dx_diff counter and dx_diff
 
 `timescale 1 ns / 1 ps
-`define PORT_SIZE 32
+`define PORT_SIZE 16
+`define COL_WIDTH 4
+`define ROW_NUM 48
 
 module testfixture;
 
@@ -22,10 +24,9 @@ reg [`PORT_SIZE*16-1:0] din;
 reg [`PORT_SIZE*16-1:0] dout;
 
 integer i;
-
 always@(posedge clk)
 	for (i = 0; i <= `PORT_SIZE - 1; i = i + 1)
-		begin : assign_bits
+		begin
 			if (ren)
 					din[i*16 +: 16] <= mem_r[raddr * `PORT_SIZE + i];
 			else
@@ -66,8 +67,8 @@ initial begin
 end
 
 initial begin
-	$readmemb("bssr_frames.dat", mem_r);
-	$readmemb("empty.dat", mem_w);
+	$readmemh("bssr_64_h.dat", mem_r);
+	$readmemh("empty_h.dat", mem_w);
 end
 
 initial begin
@@ -81,7 +82,8 @@ initial begin
 	en <= 0;
 	#40
 	en <= 1;
-	#100_000;
+	#5000;
+	$writememh("bssr_64_output_h.dat", mem_w);
 	$finish;
 end
 

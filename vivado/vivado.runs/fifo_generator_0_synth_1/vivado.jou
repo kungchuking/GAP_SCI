@@ -1,0 +1,13 @@
+#-----------------------------------------------------------
+# Vivado v2022.1 (64-bit)
+# SW Build 3526262 on Mon Apr 18 15:47:01 MDT 2022
+# IP Build 3524634 on Mon Apr 18 20:55:01 MDT 2022
+# Start of session at: Thu Aug 21 18:15:32 2025
+# Process ID: 1036407
+# Current directory: /nfs/ug/homes-2/c/cheng520/ISML/GAP_SCI/vivado/vivado.runs/fifo_generator_0_synth_1
+# Command line: vivado -log fifo_generator_0.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source fifo_generator_0.tcl
+# Log file: /nfs/ug/homes-2/c/cheng520/ISML/GAP_SCI/vivado/vivado.runs/fifo_generator_0_synth_1/fifo_generator_0.vds
+# Journal file: /nfs/ug/homes-2/c/cheng520/ISML/GAP_SCI/vivado/vivado.runs/fifo_generator_0_synth_1/vivado.jou
+# Running On: ug51, OS: Linux, CPU Frequency: 4583.941 MHz, CPU Physical cores: 8, Host memory: 33386 MB
+#-----------------------------------------------------------
+source fifo_generator_0.tcl -notrace

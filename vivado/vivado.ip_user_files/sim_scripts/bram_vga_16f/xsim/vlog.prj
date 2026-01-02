@@ -1,0 +1,6 @@
+verilog xil_defaultlib  \
+"../../../../vivado.gen/sources_1/ip/bram_vga_16f/sim/bram_vga_16f.v" \
+
+verilog xil_defaultlib "glbl.v"
+
+nosort

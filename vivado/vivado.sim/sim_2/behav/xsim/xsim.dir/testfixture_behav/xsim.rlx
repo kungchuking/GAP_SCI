@@ -1,0 +1,12 @@
+
+{ 
+    crc :  5546294848056011564  , 
+    ccp_crc :  0  , 
+    cmdline : " --incr --debug typical --relax --mt 8 -L xil_defaultlib -L xbip_utils_v3_0_10 -L axi_utils_v2_0_6 -L xbip_pipe_v3_0_6 -L xbip_dsp48_wrapper_v3_0_4 -L xbip_dsp48_addsub_v3_0_6 -L xbip_dsp48_multadd_v3_0_6 -L xbip_bram18k_v3_0_6 -L mult_gen_v12_0_18 -L floating_point_v7_1_14 -L uvm -L unisims_ver -L unimacro_ver -L secureip -L xpm --snapshot testfixture_behav xil_defaultlib.testfixture xil_defaultlib.glbl" , 
+    buildDate : "Apr 18 2022" , 
+    buildTime : "15:53:03" , 
+    linkCmd : "/usr/bin/gcc -Wa,-W  -O -fPIC  -m64  -Wl,--no-as-needed  -Wl,--unresolved-symbols=ignore-all  -o \"xsim.dir/testfixture_behav/xsimk\"   \"xsim.dir/testfixture_behav/obj/xsim_0.lnx64.o\" \"xsim.dir/testfixture_behav/obj/xsim_1.lnx64.o\" \"xsim.dir/testfixture_behav/obj/xsim_2.lnx64.o\" \"xsim.dir/testfixture_behav/obj/xsim_3.lnx64.o\" \"xsim.dir/testfixture_behav/obj/xsim_4.lnx64.o\" \"xsim.dir/testfixture_behav/obj/xsim_5.lnx64.o\" -L\"/CMC/tools/xilinx/Vivado_2022.1/Vivado/2022.1/lib/lnx64.o\" -lrdi_simulator_kernel   -lrdi_simbridge_kernel" , 
+    aggregate_nets : 
+    [ 
+    ] 
+} 

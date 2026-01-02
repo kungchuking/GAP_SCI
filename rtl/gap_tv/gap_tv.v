@@ -1,5 +1,5 @@
-`define PORT_SIZE 32
-`define COL_WIDTH 2
+`define PORT_SIZE 16
+`define COL_WIDTH 4
 `define ROW_NUM 48
 
 module gap_tv(
@@ -24,9 +24,31 @@ module gap_tv(
 
 	wire dx_diff_rst_n, out_valid;
 
-	dx_diff_addr_counter dx_c1(clk, rst_n, 1, dx_diff_rst_n, raddr);
-	dx_diff dx1(clk, rst_n & dx_diff_rst_n, din, dout, out_valid);
-	dx_diff_addr_counter dx_c2(clk, rst_n, out_valid, dx_diff_rst_n, waddr);
+	dx_diff_addr_counter dx_c1(
+		.clk(clk),
+		.rst_n(rst_n),
+		.en(1),
+		.dx_diff_rst_n(dx_diff_rst_n),
+		.addr(raddr)
+	);
+	dx_diff dx1(
+		.clk(clk),
+		.rst_n(rst_n),
+		.dx_diff_rst_n(dx_diff_rst_n),
+		.in(din),
+		.out(dout),
+		.all_out_valid(out_valid)
+	);
+	dx_diff_addr_counter dx_c2(
+		.clk(clk),
+		.rst_n(rst_n),
+		.en(out_valid),
+		.dx_diff_rst_n(),
+		.addr(waddr)
+	);
+
+	assign ren = 1;
+	assign wen = out_valid;
 
 endmodule
 
@@ -42,7 +64,7 @@ module dx_diff_addr_counter(
 	output [7:0] addr;
 	reg [7:0] dx_diff_addr_row, dx_diff_addr_col;
 
-	always @(posedge clk)
+	always @(posedge clk, negedge rst_n)
 		begin
 			dx_diff_rst_n <= 1;
 			if (rst_n == 0)
@@ -55,18 +77,20 @@ module dx_diff_addr_counter(
 				begin
 					if (dx_diff_addr_col == 0 && dx_diff_addr_row == (`ROW_NUM - 1))
 						begin
-							dx_diff_rst_n <= 0;
 							dx_diff_addr_row <= 0;
 							dx_diff_addr_col <= `COL_WIDTH - 1;
 						end
 					else if (dx_diff_addr_col == 0)
 						begin
-							dx_diff_rst_n <= 0;
 							dx_diff_addr_row <= dx_diff_addr_row + 1;
 							dx_diff_addr_col <= `COL_WIDTH - 1;
 						end
 					else
 						begin
+							if (dx_diff_addr_col == `COL_WIDTH - 1)
+								begin
+									dx_diff_rst_n <= 0;
+								end
 							dx_diff_addr_col <= dx_diff_addr_col - 1;
 						end
 				end
@@ -79,33 +103,39 @@ endmodule
 module dx_diff(
 	clk,
 	rst_n,
+	dx_diff_rst_n,
 	in,
 	out,
 	all_out_valid
 );
 
-	input clk, rst_n;
+	input clk, rst_n, dx_diff_rst_n;
 	input [`PORT_SIZE*16-1:0] in;
 	output reg [`PORT_SIZE*16-1:0] out;
 	output all_out_valid;
 
 	reg [15:0] prev;
-	reg [15:0] in_array [0:`PORT_SIZE];
-	reg [15:0] out_array [0:`PORT_SIZE];
-	reg [15:0] out_valid;
-	reg [15:0] faults [0:2];
-	reg [2:0] faults_last;
+	reg [15:0] in_array [0:`PORT_SIZE-1];
+	wire [15:0] out_array [0:`PORT_SIZE-1];
+	wire [15:0] out_valid;
+	wire [15:0] faults [0:2];
+	wire [15:0] prev_in;
+	wire [15:0] prev_in_test;
 
 	assign all_out_valid = &out_valid;
 
+	// Convert input and output to 2D array
 	integer i;
 	always @(*)
 		begin
-			for (i = 0; i <= `PORT_SIZE-1; i = i + 1)
-				in_array[i] = in[i*16 +: 16];
-				out[i*16 +: 16] = out_array[i];
+			for (i = 0; i <= (`PORT_SIZE - 1); i = i + 1)
+				begin
+					in_array[i] = in[i*16 +: 16];
+					out[i*16 +: 16] = out_array[i];
+				end
 		end
 
+	// Main subtraction circuits
 	genvar j;
 	generate
 		for (j = 0; j < `PORT_SIZE - 1; j = j + 1)
@@ -126,22 +156,26 @@ module dx_diff(
 		.aclk(clk),
 		.aresetn(rst_n),
 		.s_axis_a_tvalid(1),
-		.s_axis_a_tdata(prev),
+		.s_axis_a_tdata(prev_in),
 		.s_axis_b_tvalid(1),
 		.s_axis_b_tdata(in_array[`PORT_SIZE-1]),
 		.m_axis_result_tvalid(out_valid[`PORT_SIZE-1]),
 		.m_axis_result_tdata(out_array[`PORT_SIZE-1]),
-		.m_axis_result_tuser(faults_last)
+		.m_axis_result_tuser(faults[`PORT_SIZE-1])
 	);
-
-	always @(posedge clk)
+	
+	// Prev
+	always @(posedge clk, negedge rst_n)
 		begin
 			if (rst_n == 0)
-				prev <= 16'b0; // should be self! self - self = 0 for last col
+				prev <= 16'b0;
 			else
-				begin
-					prev <= in_array[0];
-				end
+				prev <= in_array[0];
 		end
+	
+	assign prev_in_test = dx_diff_rst_n ? 16'b0 : in_array[`PORT_SIZE-1];
+	assign prev_in = dx_diff_rst_n ? prev : in_array[`PORT_SIZE-1];
+
+
 	
 endmodule
